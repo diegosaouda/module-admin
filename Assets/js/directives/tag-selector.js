@@ -94,7 +94,7 @@
 					'</span>' +
 					'<div class="all-tags clearfix" ng-show="showAll">' +
 						'<h6 ng-pluralize count="availTags.length" when="' + i18n.trans('m.rbs.tag.admin.js.available-tags-pluralize') + '"></h6>' +
-						'<a href ng-repeat="tag in availTags | orderBy:\'label\'" ng-click="appendTag(tag)"><span ng-class="{true:\'opacity-half\'}[isUsed(tag)]" class="tag (= tag.color =)">(= tag.label =)</span></a>' +
+						'<a href ng-repeat="tag in availTags | orderBy:\'label\'" ng-click="appendTag(tag)"><span rbs-tag="tag"></span></a>' +
 					'</div>' +
 				'</div>',
 
@@ -145,6 +145,7 @@
 
 				function backspace () {
 					if (scope.tags.length > 1) {
+						scope.tags[inputIndex-1].used = false;
 						scope.tags.splice(inputIndex-1, 1);
 						update();
 					}
@@ -178,6 +179,7 @@
 				function appendTag (tag) {
 					if (!scope.isUsed(tag)) {
 						scope.tags.splice(inputIndex, 0, tag);
+						tag.used = true;
 						update();
 					}
 				}
@@ -196,7 +198,7 @@
 				scope.isUsed = function (tag) {
 					var i;
 					for (i=0 ; i<scope.tags.length ; i++) {
-						if (angular.lowercase(scope.tags[i].label) === angular.lowercase(tag.label)) {
+						if (scope.tags[i].id === tag.id) {
 							return true;
 						}
 					}
@@ -204,6 +206,7 @@
 				};
 
 				scope.removeTag = function (index) {
+					scope.tags[index].used = false;
 					scope.tags.splice(index, 1);
 					update();
 				};
