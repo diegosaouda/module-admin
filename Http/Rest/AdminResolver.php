@@ -5,8 +5,6 @@ use Change\Http\Rest\Actions\DiscoverNameSpace;
 use Change\Http\Rest\Resolver;
 use Change\Http\Rest\Request;
 use Rbs\Admin\Http\Rest\Actions\GetCurrentUser;
-use Rbs\Admin\Http\Rest\Actions\GetUserTokens;
-use Rbs\Admin\Http\Rest\Actions\RevokeToken;
 
 /**
  * @name \Rbs\Admin\Http\Rest\AdminResolver
@@ -33,7 +31,7 @@ class AdminResolver
 	 */
 	public function getNextNamespace($event, $namespaceParts)
 	{
-		return array('currentUser', 'userTokens', 'revokeToken');
+		return array('currentUser');
 	}
 
 	/**
@@ -67,18 +65,6 @@ class AdminResolver
 				$action = new GetCurrentUser();
 				$event->setAction(function($event) use($action) {$action->execute($event);});
 				$this->resolver->setAuthorisation($event, null, 'currentUser');
-			}
-			else if ($actionName === 'userTokens')
-			{
-				$action = new GetUserTokens();
-				$event->setAction(function($event) use($action) {$action->execute($event);});
-				$this->resolver->setAuthorisation($event, null, 'userTokens');
-			}
-			else if ($actionName === 'revokeToken')
-			{
-				$action = new RevokeToken();
-				$event->setAction(function($event) use($action) {$action->execute($event);});
-				$this->resolver->setAuthorisation($event, null, 'revokeToken');
 			}
 		}
 	}
