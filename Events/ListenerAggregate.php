@@ -1,18 +1,14 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: fredericbonjour
- * Date: 11/07/13
- * Time: 12:52
- * To change this template use File | Settings | File Templates.
- */
-
 namespace Rbs\Admin\Events;
 
 
 use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
 
-class ListenerAggregate implements \Zend\EventManager\ListenerAggregateInterface {
+/**
+ * @name \Rbs\Admin\Events\ListenerAggregate
+ */
+class ListenerAggregate implements ListenerAggregateInterface {
 
 	/**
 	 * Attach one or more listeners
@@ -28,10 +24,9 @@ class ListenerAggregate implements \Zend\EventManager\ListenerAggregateInterface
 	{
 		$callback = function (\Zend\EventManager\Event $event)
 		{
-			$resolver = new GetAvailablePageFunctions();
-			return $resolver->execute($event);
+			(new GetAvailablePageFunctions())->execute($event);
 		};
-		$events->attach(\Change\Collection\CollectionManager::EVENT_GET_COLLECTION, $callback, 5);
+		$events->attach(\Change\Collection\CollectionManager::EVENT_GET_COLLECTION, $callback, 10);
 	}
 
 	/**
