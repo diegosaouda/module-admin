@@ -1,26 +1,20 @@
 <?php
-
-namespace Rbs\Admin\Events;
+namespace Rbs\Admin\Collection;
 
 use Change\Collection\CollectionArray;
 use Change\Documents\DocumentServices;
+use Change\Presentation\PresentationServices;
 
 /**
- * @name \Rbs\Admin\Events\GetAvailablePageFunctions
+ * @name \Rbs\Admin\Collection\Collections
  */
-class GetAvailablePageFunctions
+class Collections
 {
 	/**
 	 * @param \Zend\EventManager\Event $event
 	 */
-	public function execute($event)
+	public function addAvailablePageFunctions($event)
 	{
-		$code = $event->getParam('code');
-		if ($code !== 'Rbs_Website_AvailablePageFunctions')
-		{
-			return;
-		}
-
 		$documentServices = $event->getParam('documentServices');
 		if ($documentServices instanceof DocumentServices)
 		{
@@ -33,7 +27,7 @@ class GetAvailablePageFunctions
 				$blocks = $page->getContentLayout()->getBlocks();
 				if (count($blocks))
 				{
-					$presentationServices = new \Change\Presentation\PresentationServices($documentServices->getApplicationServices());
+					$presentationServices = new PresentationServices($documentServices->getApplicationServices());
 					$blockManager = $presentationServices->getBlockManager();
 					foreach ($blocks as $block)
 					{
@@ -48,12 +42,12 @@ class GetAvailablePageFunctions
 					}
 				}
 
-				$event->setParam('collection', new CollectionArray($code, $parsedFunctions));
+				$event->setParam('collection', new CollectionArray('Rbs_Website_AvailablePageFunctions', $parsedFunctions));
 				$event->stopPropagation();
 			}
 			else
 			{
-				$presentationServices = new \Change\Presentation\PresentationServices($documentServices->getApplicationServices());
+				$presentationServices = new PresentationServices($documentServices->getApplicationServices());
 				$blockManager = $presentationServices->getBlockManager();
 				$parsedFunctions = array();
 				foreach ($blockManager->getBlockNames() as $blockName)
@@ -68,7 +62,7 @@ class GetAvailablePageFunctions
 					}
 				}
 
-				$event->setParam('collection', new CollectionArray($code, $parsedFunctions));
+				$event->setParam('collection', new CollectionArray('Rbs_Website_AvailablePageFunctions', $parsedFunctions));
 				$event->stopPropagation();
 			}
 		}
